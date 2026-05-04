@@ -28,6 +28,9 @@ class BoardStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'visibility' => ['required', 'in:PRIVATE,PUBLIC,WORKSPACE'],
+            'members' => ['nullable', 'array'],
+            'members.*.uuid' => ['required', Rule::exists('users', 'uuid')],
+            'members.*.role' => ['required', 'in:ADMIN,MEMBER,VIEWER'],
         ];
     }
 

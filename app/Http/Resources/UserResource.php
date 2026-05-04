@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'userName' => $this->username,
             'email' => $this->email,
             'avatar' => $this->avatar,
+            'role' => $this->whenPivotLoaded('board_members', fn() => $this->pivot->role),
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];

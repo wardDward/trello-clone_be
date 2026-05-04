@@ -2,13 +2,16 @@
 
 namespace App\Http\Services;
 
+use App\Http\Enums\BoardMember;
 use App\Http\Enums\BoardVisibility;
 use App\Models\Board;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BoardService
 {
-    public function getBoards($user, int $page = 1, int $pageSize = 10): array
+    public function getBoards(User $user, int $page = 1, int $pageSize = 10): array
     {
         $query = $user->boards()->with('owner')->orderBy('created_at', 'desc');
         $total = $query->count();
@@ -26,13 +29,30 @@ class BoardService
 
     public function createBoard(array $data)
     {
-        $board = Board::create([
-            'name' => $data['name'],
-            'description' => $data['description'] ?? null,
-            'owner_id' => Auth::user()->id,
-            'visibility' => BoardVisibility::from($data['visibility']),
-            'background' => $data['background'] ?? null,
-        ]);
+
+        $board = DB::transaction(function () use ($data) {
+            $board = Board::create([
+                'name' => $data['name'],
+                'description' => $data['description'] ?? null,
+                'owner_id' => Auth::user()->id,
+                'visibility' => BoardVisibility::from($data['visibility']),
+                'background' => $data['background'] ?? null,
+            ]);
+
+            if (isset($data['members']) && is_array($data['members'])) {
+                $uuids = collect($data['members'])->pluck('uuid');
+                $users = User::whereIn('uuid', $uuids)->get()->keyBy('uuid');
+
+                $members = collect($data['members'])->mapWithKeys(function ($member) use ($users) {
+                    $user = $users->get($member['uuid']);
+                    return [$user->id => ['role' => BoardMember::from($member['role'])]];
+                })->toArray();
+                $board->members()->attach($members);
+            }
+            
+            $board->members()->attach(Auth::user()->id, ['role' => BoardMember::ADMIN->value]);
+            return $board;
+        });
 
         return $board;
     }
@@ -59,7 +79,10 @@ class BoardService
 
     public function deleteBoard(Board $board)
     {
-        $board->delete();
+        DB::transaction(function () use ($board){
+            $board->members()->detach();
+            $board->delete();
+        });
         return [
             'message' => 'Board deleted successfully',
         ];

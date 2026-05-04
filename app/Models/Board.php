@@ -34,6 +34,7 @@ class Board extends Model
         'visibility' => BoardVisibility::class,
     ];
 
+
     /**
      * Get the owner of the board.
      *
@@ -43,4 +44,15 @@ class Board extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    /**
+     * Summary of members
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<User, Board, \Illuminate\Database\Eloquent\Relations\Pivot>
+     */
+    public function members(){
+        return $this->belongsToMany(User::class, 'board_members', 'board_id', 'user_id')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
 }
