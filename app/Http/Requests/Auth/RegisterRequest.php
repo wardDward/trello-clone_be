@@ -26,7 +26,7 @@ class RegisterRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
-            'user_name' => ['required', 'string', 'max:255', Rule::unique('users', 'user_name')],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'confirmed'],
@@ -40,7 +40,8 @@ class RegisterRequest extends FormRequest
     {     
      return [
             'email.unique' => 'The provided email is already registered.',
-            'user_name.unique' => 'The provided username is already taken.',
+            'username.required' => 'The username field is required.',
+            'username.unique' => 'The provided username is already taken.',
             'password.confirmed' => 'The password confirmation does not match.',
         ];
     }
