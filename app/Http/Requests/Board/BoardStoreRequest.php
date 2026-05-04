@@ -40,6 +40,10 @@ class BoardStoreRequest extends FormRequest
         return [
             'name.max' => 'The board name may not be greater than 255 characters.',
             'visibility.in' => 'The visibility must be one of the following: PRIVATE, PUBLIC, WORKSPACE.',
+            'members.*.uuid.required' => 'Each member must have a valid UUID.',
+            'members.*.uuid.exists' => 'Each member UUID must exist in the users table.',
+            'members.*.role.required' => 'Each member must have a role.',
+            'members.*.role.in' => 'Each member role must be one of the following: ADMIN, MEMBER, VIEWER.',
         ];
     }
 }

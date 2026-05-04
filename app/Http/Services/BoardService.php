@@ -63,13 +63,31 @@ class BoardService
     }
 
     public function updateBoard(Board $board, array $data)
-    {
+    {   
+
+        $board = DB::transaction(function() use ($board, $data){
+           
         $board->update([
-            'name' => $data['name'],
-            'description' => $data['description'] ?? null,
-            'visibility' => BoardVisibility::from($data['visibility']),
-            'background' => $data['background'] ?? null,
-        ]);
+                    'name' => $data['name'],
+                    'description' => $data['description'] ?? null,
+                    'visibility' => BoardVisibility::from($data['visibility']),
+                    'background' => $data['background'] ?? null,
+                ]);
+
+                if (isset($data['members']) && is_array($data['members'])) {
+                    $uuids = collect($data['members'])->pluck('uuid');
+                    $users = User::whereIn('uuid', $uuids)->get()->keyBy('uuid');
+
+                    $members = collect($data['members'])->mapWithKeys(function($member) use ($users){
+                        $user = $users->get($member['uuid']);
+                        return [$user->id => ['role' => BoardMember::from($member['role'])]];
+                    })->toArray();
+
+                    $board->members()->syncWithoutDetaching($members);
+                }
+
+                return $board;
+            });
 
         return [
             'message' => 'Board updated successfully',
