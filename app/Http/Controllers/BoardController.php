@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Board\BoardStoreRequest;
 use App\Http\Requests\Board\BoardUpdateRequest;
+use App\Http\Requests\Board\MemberRequest;
 use App\Http\Resources\BoardResource;
+use App\Http\Resources\UserResource;
 use App\Http\Services\BoardService;
 use App\Models\Board;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -57,5 +59,23 @@ class BoardController extends Controller
         $this->authorize('delete', $board);
 
         return $this->service->deleteBoard($board);
+    }
+
+    public function addMembers(Board $board, MemberRequest $request)
+    {
+        //only admin can add members
+        $this->authorize('update', $board);
+        $members = $this->service->addMembers($board, $request->validated());
+
+        return UserResource::collection($members);
+    }
+
+    public function removeMembers(Board $board, MemberRequest $request)
+    {
+        //only admin can remove members
+        $this->authorize('update', $board);
+        $removed = $this->service->removeMembers($board, $request->validated());
+
+        return UserResource::collection($removed);
     }
 }

@@ -106,7 +106,34 @@ class BoardService
         ];
     }
 
-    public function addMember(Board $board, array $data){
-        
+    public function addMembers(Board $board, array $data){
+        $uuids = collect($data['members'])->pluck('uuid');
+        $users = User::whereIn('uuid', $uuids)->get()->keyBy('uuid');
+
+        $members = collect($data['members'])->mapWithKeys(function($member) use ($users){
+            $user = $users->get($member['uuid']);
+            return [$user->id => ['role' => BoardMember::from($member['role'])]];
+        })->toArray();
+
+        $board->members()->syncWithoutDetaching($members);
+
+        return $board->members()->wherePivotIn('user_id', array_keys($members))->get();
     }
+
+
+    public function removeMembers(Board $board, array $data){
+        $uuids = collect($data['members'])->pluck('uuid');
+        $users = User::whereIn('uuid', $uuids)->get()->keyBy('uuid');
+
+        $userIds = $users->pluck('id')
+            ->reject(fn($id) => $id === $board->owner_id)
+            ->toArray();
+
+        $removed = $board->members()->wherePivotIn('user_id', $userIds)->get();
+        $board->members()->detach($userIds);
+
+        return $removed;
+    }   
+
+    
 }
