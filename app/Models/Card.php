@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Enums\CardPriority;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -29,7 +30,9 @@ class Card extends Model
      * @return array<string, string>
      */
     protected $casts = [
+        'order_index' => 'numeric',
         'due_date' => 'datetime',
+        'priority' => CardPriority::class,
     ];
 
     public function boardList()

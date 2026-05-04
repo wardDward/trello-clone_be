@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('order_index')->default(1)->comment('The position of the card within the list');
             $table->timestamp('due_date')->nullable();
-            $table->enum('priority', ['LOW', 'MEDIUM', 'HIGH'])->default('MEDIUM');
+            $table->string('priority')->default('LOW');
             $table->foreignId('created_by')->constrained('users')->nullOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

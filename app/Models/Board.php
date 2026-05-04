@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable(['name', 'description', 'owner_id', 'visibility', 'background'])]
 #[Hidden(['id'])]
@@ -24,6 +25,11 @@ class Board extends Model
         return ['uuid'];
     }
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
     public $casts = [
         'visibility' => BoardVisibility::class,
     ];
@@ -31,7 +37,7 @@ class Board extends Model
     /**
      * Get the owner of the board.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function owner()
     {
