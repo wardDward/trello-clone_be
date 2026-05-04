@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Http\Enums\BoardVisibility;
+use App\Http\Enums\Board\BoardVisibility;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;

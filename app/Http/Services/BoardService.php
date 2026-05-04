@@ -2,8 +2,8 @@
 
 namespace App\Http\Services;
 
-use App\Http\Enums\BoardMember;
-use App\Http\Enums\BoardVisibility;
+use App\Http\Enums\Board\BoardMember;
+use App\Http\Enums\Board\BoardVisibility;
 use App\Models\Board;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -104,5 +104,9 @@ class BoardService
         return [
             'message' => 'Board deleted successfully',
         ];
+    }
+
+    public function addMember(Board $board, array $data){
+        
     }
 }
