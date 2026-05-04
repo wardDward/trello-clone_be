@@ -25,7 +25,7 @@ class AuthService
     public function login(array $data)
     {
 
-        if (! Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
+        if (!Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
             throw ValidationException::withMessages([
                 'general' => ['The provided credentials are incorrect.'],
             ]);
@@ -39,4 +39,6 @@ class AuthService
             'user' => $user,
         ];
     }
+
+    
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace App\Http\Enums;
 
 /**
  * Board visibility levels:

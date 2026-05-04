@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('visibility')->default('PRIVATE');
+            $table->string('background')->nullable()->comment('Background image or color code');
             $table->timestamps();
         });
     }
