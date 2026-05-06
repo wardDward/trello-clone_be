@@ -17,7 +17,6 @@ class BoardListResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'title' => $this->title,
-            'description' => $this->description,
             'order_index' => $this->order_index,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,

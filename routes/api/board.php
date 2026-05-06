@@ -16,4 +16,6 @@ Route::prefix('board')->middleware(['auth:sanctum'])->group(function(){
 
 Route::prefix('board/{board:uuid}/lists')->middleware(['auth:sanctum'])->group(function(){
     Route::post('', [BoardListController::class, 'store']);
+    Route::match(['put', 'patch'], '{list:uuid}', [BoardListController::class, 'update']);
+    Route::delete('{list:uuid}', [BoardListController::class, 'delete']);
 });

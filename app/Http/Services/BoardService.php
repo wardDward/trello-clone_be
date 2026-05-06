@@ -143,6 +143,16 @@ class BoardService
         return $boardList;
     }
 
+    public function updateBoardList(BoardList $list, array $data){
+        $list->update([
+            'title' => $data['title'] ?? $list->title,
+        ]);
 
+        return $list;
+    }
+
+    public function deleteBoardList(BoardList $list){
+        return $list->delete();
+    }
     
 }

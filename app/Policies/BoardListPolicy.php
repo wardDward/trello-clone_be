@@ -37,17 +37,17 @@ class BoardListPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, BoardList $boardList): bool
+    public function update(User $user, BoardList $boardList): Response
     {
-        return false;
+        return $boardList->board->isAdmin($user) ? Response::allow() : Response::deny('Only board admins can update lists.');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, BoardList $boardList): bool
+    public function delete(User $user, BoardList $boardList): Response
     {
-        return false;
+        return $boardList->board->isAdmin($user) ? Response::allow() : Response::deny('Only board admins can update lists.');
     }
 
     /**
