@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Requests\Board;
+namespace App\Http\Requests\Board\Card;
 
+use App\Models\Card;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class MemberRequest extends FormRequest
+class CardStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('board-admin', $this->route('board'));
+        return $this->user()->can('create', [Card::class, $this->route('boardList')]);
     }
 
     /**
@@ -24,9 +24,10 @@ class MemberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'members' => ['required', 'array'],
-            'members.*.uuid' => ['required', 'uuid', Rule::exists('users', 'uuid')],
-            'members.*.role' => ['required', 'string', 'in:ADMIN,MEMBER,VIEWER'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'due_date' => ['nullable', 'date_format:Y-m-d H:i:s'],
+            'priority' => ['nullable', 'in:LOW,MEDIUM,HIGH'],
         ];
     }
 }

@@ -20,8 +20,8 @@ class BoardResource extends JsonResource
             'description' => $this->description ?? null,
             'visibility' => $this->visibility->value,
             'background' => $this->background,
-            'createdAt' => $this->created_at,
-            'updatedAt' => $this->updated_at,
+            'createdAt' => $this->created_at->format('Y-m-d H:i:s'),
+            'updatedAt' => $this->updated_at->format('Y-m-d H:i:s'),
             'owner' => new UserResource($this->whenLoaded('owner')),
             'members' => UserResource::collection($this->whenLoaded('members')),
             'lists' => BoardListResource::collection($this->whenLoaded('lists'))

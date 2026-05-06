@@ -6,6 +6,7 @@ use App\Models\Board;
 use App\Models\BoardList;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Gate;
 
 class BoardListPolicy
 {
@@ -39,7 +40,7 @@ class BoardListPolicy
      */
     public function update(User $user, BoardList $boardList): Response
     {
-        return $boardList->board->isAdmin($user) ? Response::allow() : Response::deny('Only board admins can update lists.');
+        return Gate::allows('board-admin', $boardList->board) ? Response::allow() : Response::deny('Only board admins can update lists.');
     }
 
     /**
@@ -47,7 +48,7 @@ class BoardListPolicy
      */
     public function delete(User $user, BoardList $boardList): Response
     {
-        return $boardList->board->isAdmin($user) ? Response::allow() : Response::deny('Only board admins can update lists.');
+        return Gate::allows('board-admin', $boardList->board) ? Response::allow() : Response::deny('Only board admins can delete lists.');
     }
 
     /**

@@ -30,13 +30,25 @@ class Card extends Model
      * @return array<string, string>
      */
     protected $casts = [
-        'order_index' => 'numeric',
         'due_date' => 'datetime',
         'priority' => CardPriority::class,
     ];
-
+    
+    /**
+     * Summary of boardList
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<BoardList, Card>
+     */
     public function boardList()
     {
         return $this->belongsTo(BoardList::class);
+    }
+
+    /**
+     * Summary of creator
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, Card>
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

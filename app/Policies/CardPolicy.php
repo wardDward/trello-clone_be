@@ -3,12 +3,13 @@
 namespace App\Policies;
 
 use App\Models\Board;
+use App\Models\BoardList;
+use App\Models\Card;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Gate;
 
-class BoardPolicy
+class CardPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -21,7 +22,7 @@ class BoardPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Board $board): bool
+    public function view(User $user, Card $card): bool
     {
         return false;
     }
@@ -29,31 +30,31 @@ class BoardPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user, BoardList $boardList): Response
     {
-        return Auth::check();
+        return Gate::allows('belongs-to-board', $boardList->board) ? Response::allow() : Response::deny('Only members of the board can create cards.');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Board $board): Response
+    public function update(User $user, Card $card): Response
     {
-        return Gate::allows('board-admin', $board) ? Response::allow() : Response::deny('Only board admins can update the board.');
+        return Gate::allows('belongs-to-board', $card->boardList->board) ? Response::allow() : Response::deny('Only members of the board can update cards.');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Board $board): Response
+    public function delete(User $user, Card $card): Response
     {
-        return $board->owner()->is($user) ? Response::allow() : Response::deny('Only board owner can delete the board.');
+        return Gate::allows('board-admin', $card->boardList->board) ? Response::allow() : Response::deny('Only board admins can delete cards.');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Board $board): bool
+    public function restore(User $user, Card $card): bool
     {
         return false;
     }
@@ -61,7 +62,7 @@ class BoardPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Board $board): bool
+    public function forceDelete(User $user, Card $card): bool
     {
         return false;
     }
