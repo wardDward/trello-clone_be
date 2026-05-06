@@ -24,6 +24,7 @@ class BoardResource extends JsonResource
             'updatedAt' => $this->updated_at,
             'owner' => new UserResource($this->whenLoaded('owner')),
             'members' => UserResource::collection($this->whenLoaded('members')),
+            'lists' => BoardListResource::collection($this->whenLoaded('lists'))
         ];
     }
 }

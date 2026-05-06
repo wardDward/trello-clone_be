@@ -60,4 +60,9 @@ class Board extends Model
             ->withTimestamps();
     }
 
+    // board list relationship
+    public function lists(){
+        return $this->hasMany(BoardList::class);
+    }
+
 }

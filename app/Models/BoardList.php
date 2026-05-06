@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable(['board_id', 'title', 'order_index'])]
-#[Hidden(['id'])]
+#[Hidden(['id', 'board_id'])]
 class BoardList extends Model
 {
     use HasUuids;
@@ -32,5 +32,13 @@ class BoardList extends Model
     public function board()
     {
         return $this->belongsTo(Board::class, 'board_id');
+    }
+
+    /**
+     * Summary of cards
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Card, BoardList>
+     */
+    public function cards(){
+        return $this->hasMany(Card::class, 'board_list_id');
     }
 }

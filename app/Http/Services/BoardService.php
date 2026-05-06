@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Http\Enums\Board\BoardMember;
 use App\Http\Enums\Board\BoardVisibility;
 use App\Models\Board;
+use App\Models\BoardList;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,7 @@ class BoardService
 {
     public function getBoards(User $user, int $page = 1, int $pageSize = 10): array
     {
-        $query = $user->boards()->with('owner')->orderBy('created_at', 'desc');
+        $query = $user->boards()->with(['owner', 'lists'])->orderBy('created_at', 'desc');
         $total = $query->count();
 
         $boards = $query->orderBy('created_at', 'desc')
@@ -59,7 +60,7 @@ class BoardService
 
     public function getBoardByUuid(Board $board)
     {
-        return $board;
+        return $board->load(['owner', 'members', 'lists']);
     }
 
     public function updateBoard(Board $board, array $data)
@@ -130,6 +131,18 @@ class BoardService
 
         return $removed;
     }   
+
+
+    // board list
+    public function createBoardList(Board $board, array $data){
+        $boardList = $board->lists()->create([
+            'title' => $data['title'],
+            'order_index' => $board->lists()->max('order_index') ? $board->lists()->max('order_index') + 1 : 1,
+        ]);
+
+        return $boardList;
+    }
+
 
     
 }

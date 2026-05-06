@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\BoardListController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('board')->middleware(['auth:sanctum'])->group(function(){
@@ -11,4 +12,8 @@ Route::prefix('board')->middleware(['auth:sanctum'])->group(function(){
     Route::delete('{board:uuid}', [BoardController::class, 'delete']);
     Route::match(['put', 'patch'],'{board:uuid}/add_members', [BoardController::class, 'addMembers']);
     Route::match(['put', 'patch'],'{board:uuid}/remove_members', [BoardController::class, 'removeMembers']);
+});
+
+Route::prefix('board/{board:uuid}/lists')->middleware(['auth:sanctum'])->group(function(){
+    Route::post('', [BoardListController::class, 'store']);
 });

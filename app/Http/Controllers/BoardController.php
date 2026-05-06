@@ -23,7 +23,7 @@ class BoardController extends Controller
         $result = $this->service->getBoards(auth()->user(), $request->query('page', 1));
 
         return response()->json([
-            'boards' => BoardResource::collection($result['data']->load(['owner', 'members'])),
+            'boards' => BoardResource::collection($result['data']->load(['owner', 'members', 'lists'])),
             'total' => $result['total'],
         ]);
     }
