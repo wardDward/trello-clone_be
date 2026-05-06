@@ -35,6 +35,10 @@ class Board extends Model
     ];
 
 
+    public function isAdmin(User $user){
+        return $this->members()->where('user_id', $user->id)->wherePivot('role', 'ADMIN')->exists();
+    }
+
     /**
      * Get the owner of the board.
      *
@@ -44,6 +48,7 @@ class Board extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+    
 
     /**
      * Summary of members

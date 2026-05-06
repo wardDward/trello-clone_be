@@ -49,7 +49,7 @@ class BoardController extends Controller
         $board = $this->service->updateBoard($board, $request->validated());
 
         return response()->json([
-            'message' => $board['message'],
+            'message' => 'Board updated successfully',
             'board' => new BoardResource($board['board']->load(['owner', 'members'])),
         ]);
     }
@@ -57,13 +57,12 @@ class BoardController extends Controller
     public function delete(Board $board)
     {
         $this->authorize('delete', $board);
-
-        return $this->service->deleteBoard($board);
+        $this->service->deleteBoard($board);
+        return response()->json(['message' => 'Board deleted successfully']);
     }
 
     public function addMembers(Board $board, MemberRequest $request)
     {
-        //only admin can add members
         $this->authorize('update', $board);
         $members = $this->service->addMembers($board, $request->validated());
 
@@ -72,7 +71,6 @@ class BoardController extends Controller
 
     public function removeMembers(Board $board, MemberRequest $request)
     {
-        //only admin can remove members
         $this->authorize('update', $board);
         $removed = $this->service->removeMembers($board, $request->validated());
 

@@ -4,7 +4,9 @@ namespace App\Policies;
 
 use App\Models\Board;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\Response;
+
 
 class BoardPolicy
 {
@@ -29,23 +31,23 @@ class BoardPolicy
      */
     public function create(User $user): bool
     {
-        return auth()->check();
+        return Auth::check();
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Board $board): bool
+    public function update(User $user, Board $board): Response
     {
-        return $user->id === $board->owner_id;
+        return $board->isAdmin($user) ? Response::allow() : Response::deny('Only board admins can update the board.');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Board $board): bool
+    public function delete(User $user, Board $board): Response
     {
-        return $user->id === $board->owner_id;
+        return $board->owner()->is($user) ? Response::allow() : Response::deny('Only board owner can delete the board.');
     }
 
     /**

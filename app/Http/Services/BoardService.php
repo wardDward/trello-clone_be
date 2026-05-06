@@ -90,7 +90,6 @@ class BoardService
             });
 
         return [
-            'message' => 'Board updated successfully',
             'board' => $board,
         ];
     }
@@ -101,9 +100,6 @@ class BoardService
             $board->members()->detach();
             $board->delete();
         });
-        return [
-            'message' => 'Board deleted successfully',
-        ];
     }
 
     public function addMembers(Board $board, array $data){
