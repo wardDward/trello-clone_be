@@ -36,6 +36,6 @@ class AuthController extends Controller
     }
 
     public function validate(){
-        return Auth::user() ? new UserResource(Auth::user()) : null;
+        return Auth::user() ? new UserResource(Auth::user()) : response()->json(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
     }
 }
