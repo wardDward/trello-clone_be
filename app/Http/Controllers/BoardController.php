@@ -11,6 +11,7 @@ use App\Http\Services\BoardService;
 use App\Models\Board;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class BoardController extends Controller
 {
@@ -33,7 +34,10 @@ class BoardController extends Controller
         $this->authorize('create', Board::class);
         $board = $this->service->createBoard($request->validated());
 
-        return new BoardResource($board->load(['owner', 'members']));
+        return response()->json([
+            'message' => 'Board created successfully',
+            'board' => new BoardResource($board->load(['owner', 'members'])),
+        ], Response::HTTP_CREATED);
     }
 
     public function show(Board $board)
