@@ -37,8 +37,10 @@ class BoardService
                 'description' => $data['description'] ?? null,
                 'owner_id' => Auth::user()->id,
                 'visibility' => BoardVisibility::from($data['visibility']),
-                'background' => $data['background'] ?? null,
             ]);
+
+            // Attach members if provided on background creation
+            
 
             if (isset($data['members']) && is_array($data['members'])) {
                 $uuids = collect($data['members'])->pluck('uuid');
