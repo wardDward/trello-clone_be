@@ -14,9 +14,24 @@ use Illuminate\Support\Facades\Storage;
 
 class BoardService
 {
-    public function getBoards(User $user, int $page = 1, int $pageSize = 10): array
+    public function ownedBoards(User $user, int $page = 1, int $pageSize = 10): array
     {
         $query = $user->boards()->with(['owner', 'lists'])->orderBy('created_at', 'desc');
+        $total = $query->count();
+
+        $boards = $query->orderBy('created_at', 'desc')
+            ->skip(($page - 1) * $pageSize)
+            ->take($pageSize)
+            ->get();
+
+        return [
+            'data' => $boards,
+            'total' => $total,
+        ];
+    }
+    public function getBoards(User $user, int $page = 1, int $pageSize = 10): array
+    {
+        $query = $user->boardMembers()->with(['owner', 'lists'])->orderBy('created_at', 'desc');
         $total = $query->count();
 
         $boards = $query->orderBy('created_at', 'desc')

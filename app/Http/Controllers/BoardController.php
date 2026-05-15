@@ -66,6 +66,16 @@ class BoardController extends Controller
         return response()->json(['message' => 'Board deleted successfully']);
     }
 
+    public function ownedBoards(Request $request)
+    {
+        $result = $this->service->ownedBoards(Auth::user(), $request->query('page', 1));
+
+        return response()->json([
+            'boards' => BoardResource::collection($result['data']->load(['owner', 'members', 'lists'])),
+            'total' => $result['total'],
+        ]);
+    }
+
     public function addMembers(Board $board, MemberRequest $request)
     {
         $this->authorize('update', $board);
