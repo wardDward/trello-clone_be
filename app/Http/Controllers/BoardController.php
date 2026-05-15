@@ -37,7 +37,7 @@ class BoardController extends Controller
 
         return response()->json([
             'message' => 'Board created successfully',
-            'board' => new BoardResource($board->load(['owner', 'members'])),
+            'board' => new BoardResource($board),
         ], Response::HTTP_CREATED);
     }
 
