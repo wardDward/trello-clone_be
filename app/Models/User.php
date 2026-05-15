@@ -51,7 +51,18 @@ class User extends Authenticatable
         return $this->hasMany(Board::class, 'owner_id');
     }
 
+        /**
+        * Get the boards the user is a member of.
+        *
+        * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+        */
     public function boardMembers(){
         return $this->belongsToMany(Board::class, 'board_members', 'user_id', 'board_id')->withPivot('role')->withTimestamps();
     }
+
+    public function starBoard(){
+        return $this->belongsToMany(Board::class, 'starred_boards', 'user_id', 'board_id')->withTimestamps();
+    }
+
+
 }

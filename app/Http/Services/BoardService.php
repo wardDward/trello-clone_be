@@ -189,5 +189,19 @@ class BoardService
     public function deleteBoardList(BoardList $list){
         return $list->delete();
     }
+
+
+    public function starBoard(Board $board, User $user): bool
+    {
+        $isStarred = $user->starredBoards()->where('board_id', $board->id)->exists();
+
+        if ($isStarred) {
+            $user->starredBoards()->detach($board->id);
+            return false;
+        }
+
+        $user->starredBoards()->attach($board->id);
+        return true;
+    }
     
 }

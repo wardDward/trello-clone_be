@@ -91,4 +91,5 @@ class BoardController extends Controller
 
         return UserResource::collection($removed);
     }
+
 }
