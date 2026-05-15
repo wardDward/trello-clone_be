@@ -28,6 +28,7 @@ class BoardUpdateRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'visibility' => ['required', 'in:PRIVATE,PUBLIC,WORKSPACE'],
             'background' => ['nullable', 'string'],
+            'background_type' => ['nullable', 'in:file,color'],
             'members' => ['nullable', 'array'],
             'members.*.uuid' => ['required', 'uuid'],
             'members.*.role' => ['required', 'in:ADMIN,MEMBER,VIEWER'],

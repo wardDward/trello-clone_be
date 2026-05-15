@@ -20,6 +20,7 @@ class BoardResource extends JsonResource
             'description' => $this->description ?? null,
             'visibility' => $this->visibility->value,
             'background' => $this->background,
+            'backgroundType' => $this->background_type?->value,
             'createdAt' => $this->created_at->format('Y-m-d H:i:s'),
             'updatedAt' => $this->updated_at->format('Y-m-d H:i:s'),
             'owner' => new UserResource($this->whenLoaded('owner')),

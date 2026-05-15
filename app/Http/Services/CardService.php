@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class CardService{
     public function createCard(BoardList $boardList, array $data){
-
         $card = $boardList->cards()->create([
             'title' => $data['title'],
             'description' => $data['description'] ?? null,

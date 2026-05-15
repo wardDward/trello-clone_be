@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Enums\Board\BoardBackground;
 use App\Http\Enums\Board\BoardVisibility;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['name', 'description', 'owner_id', 'visibility', 'background'])]
+#[Fillable(['name', 'description', 'owner_id', 'visibility', 'background', 'background_type'])]
 #[Hidden(['id'])]
 class Board extends Model
 {
@@ -32,6 +33,7 @@ class Board extends Model
      */
     public $casts = [
         'visibility' => BoardVisibility::class,
+        'background_type' => BoardBackground::class,
     ];
 
 

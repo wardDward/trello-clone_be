@@ -11,6 +11,7 @@ use App\Http\Services\BoardService;
 use App\Models\Board;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class BoardController extends Controller
@@ -21,7 +22,7 @@ class BoardController extends Controller
 
     public function index(Request $request)
     {
-        $result = $this->service->getBoards(auth()->user(), $request->query('page', 1));
+        $result = $this->service->getBoards(Auth::user(), $request->query('page', 1));
 
         return response()->json([
             'boards' => BoardResource::collection($result['data']->load(['owner', 'members', 'lists'])),

@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\Enums\Board\BoardBackground;
 use App\Http\Enums\Board\BoardMember;
 use App\Http\Enums\Board\BoardVisibility;
 use App\Models\Board;
@@ -9,6 +10,7 @@ use App\Models\BoardList;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class BoardService
 {
@@ -37,11 +39,26 @@ class BoardService
                 'description' => $data['description'] ?? null,
                 'owner_id' => Auth::user()->id,
                 'visibility' => BoardVisibility::from($data['visibility']),
-            ]);
+            ]); 
 
-            // Attach members if provided on background creation
+            if(isset($data['background'])){
+                if(is_string($data['background']) && ($data['background_type'] === 'COLOR' || $data['background_type'] === 'LOCAL_IMAGE')){
+                    $board->update([
+                        'background' => $data['background'],
+                        'background_type' => $data['background_type'] ?? null,
+                    ]);
+                } 
+                
+                if(request()->hasFile('background') && $data['background_type'] === 'FILE'){
+                    $rawFile = request()->file('background');
+                    $path = 'backgrounds/' . $board->uuid;
+                    $hashName = $rawFile->hashName();
+                    $storedPath = Storage::disk('public')->putFileAs($path, $rawFile, $hashName);
+
+                    $board->update(['background' => $storedPath, 'background_type' => BoardBackground::FILE->value]);
+                }
+            }
             
-
             if (isset($data['members']) && is_array($data['members'])) {
                 $uuids = collect($data['members'])->pluck('uuid');
                 $users = User::whereIn('uuid', $uuids)->get()->keyBy('uuid');
@@ -75,6 +92,7 @@ class BoardService
                     'description' => $data['description'] ?? null,
                     'visibility' => BoardVisibility::from($data['visibility']),
                     'background' => $data['background'] ?? null,
+                    'background_type' => $data['background_type'] ?? null,
                 ]);
 
                 if (isset($data['members']) && is_array($data['members'])) {

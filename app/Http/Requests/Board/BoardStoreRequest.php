@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Board;
 
+use App\Rules\StringOrFile;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,8 @@ class BoardStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'visibility' => ['required', 'in:PRIVATE,PUBLIC,WORKSPACE'],
-            'background' => ['nullable', 'string'],
+            'background' => ['nullable', new StringOrFile()],
+            'background_type' => ['nullable', 'in:FILE,COLOR,LOCAL_IMAGE'],
             'members' => ['nullable', 'array'],
             'members.*.uuid' => ['required', Rule::exists('users', 'uuid')],
             'members.*.role' => ['required', 'in:ADMIN,MEMBER,VIEWER'],
