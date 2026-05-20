@@ -76,6 +76,14 @@ class BoardController extends Controller
         ]);
     }
 
+    public function updateBoardName(Board $board, Request $request){
+        $this->authorize('update', $board);
+        $this->service->updateBoardName($board, $request->validate([
+            'name' => 'required|string|max:255',
+        ]));
+
+        return response()->json(['message' => 'Board name updated successfully']);
+    }   
     public function addMembers(Board $board, MemberRequest $request)
     {
         $this->authorize('update', $board);

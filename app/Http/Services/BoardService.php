@@ -138,6 +138,11 @@ class BoardService
         });
     }
 
+    public function updateBoardName(Board $board, array $data){
+        $board->update([
+            'name' => $data['name'],
+        ]);
+    }
     public function addMembers(Board $board, array $data){
         $uuids = collect($data['members'])->pluck('uuid');
         $users = User::whereIn('uuid', $uuids)->get()->keyBy('uuid');
@@ -189,7 +194,6 @@ class BoardService
     public function deleteBoardList(BoardList $list){
         return $list->delete();
     }
-
 
     public function starBoard(Board $board, User $user): bool
     {
